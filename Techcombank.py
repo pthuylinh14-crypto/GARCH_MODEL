@@ -110,13 +110,15 @@ MA20 = pd.Series(dataframe["close"]).rolling(window=20).mean()
 
 # %%
 # calculate VaR
-sigma_t = np.sqrt(sigma_sq)
-VaR_t = -(mu + norm.ppf(0.05)*sigma_t)
+sigma_t = np.sqrt(final_sigma_sq)
+z_alpha = norm.ppf(0.95)  # +1.64485
+VaR_t = z_alpha * sigma_t - mu
+print("var= ", np.average(VaR_t))
 
 # plotting
 fig, ax1 = plt.subplots()
 ax1.plot(dataframe['time'][2:], np.sqrt(final_sigma_sq), color='steelblue', linewidth=0.8, alpha=0.8, label="Volatility")
-ax1.plot(dataframe["time"[2:]], VaR_t, color=)
+ax1.plot(dataframe["time"][2:], VaR_t, color='steelblue')
 ax1.set_ylabel("Volatility (σ)", color='steelblue', fontsize=11)
 ax1.set_ylim(0, final_sigma_sq.max()*1.1)
 ax1.tick_params(axis='y', labelcolor='steelblue')
@@ -140,4 +142,3 @@ plt.show()
 print(len(MA20))
 print(len(dataframe["close"]))
 print(MA20.isna().sum())
-
